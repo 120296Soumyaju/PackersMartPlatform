@@ -1,0 +1,69 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Lead {
+  id                     String              @id @default(uuid())
+  customerName           String
+  mobile                 String              // Phone / Mobile number
+  email                  String?
+  pickupCity             String              // Origin / Pickup City
+  destinationCity        String
+  serviceType            String              // Household (1BHK/2BHK/3BHK/4+BHK), Office Shifting, Vehicle Transport
+  movingDate             String              // Relocation date
+  additionalRequirements String?             // Notes / Special instructions
+  status                 String              @default("Pending") // Pending, Verified, Fake, Duplicate, Re-attempt
+  leadScore              Int                 @default(0) // 0 to 100
+  leadQuality            String              @default("Cold") // Hot, Warm, Cold
+  createdAt              DateTime            @default(now())
+  updatedAt              DateTime            @updatedAt
+  
+  otpVerifications       OtpVerification[]
+  matches                LeadCompanyMatch[]
+}
+
+model OtpVerification {
+  id         String    @id @default(uuid())
+  leadId     String
+  otp        String
+  expiresAt  DateTime
+  verifiedAt DateTime?
+  createdAt  DateTime  @default(now())
+
+  lead       Lead      @relation(fields: [leadId], references: [id], onDelete: Cascade)
+}
+
+model Company {
+  id           String             @id @default(uuid())
+  companyName  String
+  mobile       String
+  email        String
+  coverage     String             // JSON string array e.g. ["Mumbai", "Delhi NCR", "Bangalore"]
+  serviceTypes String             // JSON string array e.g. ["Household Relocation", "Office Shifting", "Vehicle Transport", "Warehouse Storage"]
+  rating       Float              @default(4.5)
+  reviewCount  Int                @default(120)
+  status       String             @default("Active") // Active, Inactive
+  fleetSize    Int                @default(10)
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+  
+  matches      LeadCompanyMatch[]
+}
+
+model LeadCompanyMatch {
+  id                 String   @id @default(uuid())
+  leadId             String
+  companyId          String
+  matchScore         Int      // 0 - 100 percentage match
+  matchReasons       String   // JSON string array
+  notificationStatus String   @default("Recommended") // Recommended, Contacted
+  createdAt          DateTime @default(now())
+
+  lead    Lead    @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+}
