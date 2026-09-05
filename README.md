@@ -22,6 +22,59 @@ Customer Lead Form ➔ OTP Verification ➔ Verified Lead ➔ Admin Lead Queue �
 
 ---
 
+## 📸 Screenshots of Application
+
+Below are stepwise screenshots demonstrating the complete end-to-end PackersMart application workflow:
+
+### Step 1: Customer Relocation Inquiry - Route & Date Selection
+Captures Pickup City, Destination City, and preferred Moving Date with inline validation.
+
+![Step 1: Relocation Route & Date Selection](docs/screenshots/01_lead_form_step1_route.png)
+
+---
+
+### Step 2: Customer Relocation Inquiry - Service Type Selection
+Allows customers to select inventory volume / service requirement (1 BHK, 2 BHK, 3 BHK, 4+ BHK, Office Shifting, Vehicle Transport).
+
+![Step 2: Service Type Selection](docs/screenshots/02_lead_form_step2_service.png)
+
+---
+
+### Step 3: Customer Contact Information & Submission
+Collects Customer Name, Mobile Number (for 6-digit OTP verification), Email Address, and Special Requirements before form submission.
+
+![Step 3: Customer Contact Details](docs/screenshots/03_lead_form_step3_customer_info.png)
+
+---
+
+### Step 4: 6-Digit OTP Verification Screen
+Displays the 6-digit OTP verification dialog with countdown timer, resend trigger, and built-in **Assessment Quick-Test OTP Auto-Fill** shortcut.
+
+![Step 4: 6-Digit OTP Verification Dialog](docs/screenshots/04_otp_verification_modal.png)
+
+---
+
+### Step 5: Verified Lead Inquiry & Matched Packers & Movers Recommendations
+Renders verified status badge, lead quality score breakdown (+30 OTP, +20 Route, +15 Service, +15 Date), and top matched logistics companies with match scores %, ratings, fleet sizes, and call/book action buttons.
+
+![Step 5: Matched Packers & Movers Recommendations](docs/screenshots/05_matched_companies_modal.png)
+
+---
+
+### Step 6: Admin Operations Dashboard - Executive KPI Statistics Cards
+Provides real-time operational statistics cards displaying Total Leads, Verified Leads, Pending Leads, Fake Leads, Duplicate Leads, Lead Quality breakdown (Hot/Warm/Cold), and Active Logistics Companies.
+
+![Step 6: Admin Dashboard Executive Statistics Cards](docs/screenshots/06_admin_dashboard_kpis.png)
+
+---
+
+### Step 7: Admin Operations Lead Queue & Status Controls
+Filterable and searchable lead management queue table showing customer details, route, service type, lead quality badges (`HOT`, `WARM`, `COLD`), live status transition dropdown selectors (`Pending`, `Verified`, `Fake`, `Duplicate`, `Re-attempt`), and company match openers.
+
+![Step 7: Admin Lead Operations Queue & Status Controls](docs/screenshots/07_admin_lead_queue_table.png)
+
+---
+
 ## 🏗️ Selected Technology Stack
 
 - **Frontend:** React 18 (Vite), Tailwind CSS, Lucide React icons, Axios
@@ -35,6 +88,15 @@ Customer Lead Form ➔ OTP Verification ➔ Verified Lead ➔ Admin Lead Queue �
 
 ```text
 PackersMartPlatform/
+├── docs/                         # Application Documentation & Screenshots
+│   └── screenshots/              # Stepwise UI Workflow Screenshots
+│       ├── 01_lead_form_step1_route.png
+│       ├── 02_lead_form_step2_service.png
+│       ├── 03_lead_form_step3_customer_info.png
+│       ├── 04_otp_verification_modal.png
+│       ├── 05_matched_companies_modal.png
+│       ├── 06_admin_dashboard_kpis.png
+│       └── 07_admin_lead_queue_table.png
 ├── server/                       # Node.js / Express Backend
 │   ├── prisma/
 │   │   ├── schema.prisma         # Relational schema (Lead, OtpVerification, Company, LeadCompanyMatch)
