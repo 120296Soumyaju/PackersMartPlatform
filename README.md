@@ -98,33 +98,38 @@ Provides interactive OpenAPI 3.0 API documentation allowing developers to inspec
 
 You can expose local servers over public HTTPS URLs for remote testing or demonstration:
 
-### 1. Exposing Backend API & Swagger Docs via ngrok
+### 1. Recommended: Zero-Setup Tunnels via localtunnel (No install needed)
+Run directly from PowerShell/Terminal using `npx`:
 ```bash
-# Install ngrok via winget (Windows)
-winget install ngrok.ngrok
-
-# Authenticate with authtoken (from dashboard.ngrok.com)
-ngrok config add-authtoken <YOUR_AUTHTOKEN>
-
-# Expose Express Backend (Port 5000)
-ngrok http 5000
-```
-- **Public Swagger UI URL:** `https://<your-ngrok-domain>.ngrok-free.app/api-docs`
-- **Public API URL:** `https://<your-ngrok-domain>.ngrok-free.app/api`
-
-### 2. Exposing Frontend Portal via localtunnel (Zero-Setup)
-```bash
-# Expose Express Backend (Port 5000)
+# Expose Express Backend API & Swagger Docs (Port 5000)
 npx localtunnel --port 5000
 
-# Expose React Frontend (Port 3000)
+# Expose React Frontend App (Port 3000)
 npx localtunnel --port 3000
 ```
+- **Backend API & Swagger:** Output URL + `/api-docs` (e.g. `https://tiny-things-invent.loca.lt/api-docs`)
+- **Tunnel Password:** If prompted for a tunnel password, enter your public IP (get it from `https://loca.lt/mytunnelpassword`).
 
-To point the React frontend to a public ngrok API backend, set `VITE_API_BASE_URL`:
+### 2. Optional: Using ngrok (Requires Installation & Free Account)
+If you prefer `ngrok`, install it first and add your authtoken:
+```bash
+# Step 1: Install ngrok on Windows via winget
+winget install ngrok.ngrok
+
+# Step 2: Add your authtoken from https://dashboard.ngrok.com
+ngrok config add-authtoken <YOUR_AUTHTOKEN>
+
+# Step 3: Expose Backend (Port 5000)
+ngrok http 5000
+
+# Step 4: Expose Frontend (Port 3000)
+ngrok http 3000
+```
+
+To point the React frontend to a public backend API URL, pass `VITE_API_BASE_URL`:
 ```bash
 # In client/
-VITE_API_BASE_URL="https://<your-ngrok-domain>.ngrok-free.app/api" npm run dev
+VITE_API_BASE_URL="https://<your-public-tunnel-url>/api" npm run dev
 ```
 
 ---
