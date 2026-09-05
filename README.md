@@ -1,6 +1,6 @@
 # PackersMart Platform MVP: 1-Day Full-Stack Developer Assessment
 
-An end-to-end working MVP built for the **PackersMart Lead-to-Booking Workflow Assessment Task**. The system captures customer relocation inquiries, performs 6-digit OTP phone verification, calculates lead quality scores (`Hot`, `Warm`, `Cold`), matches verified leads to active logistics companies, and provides administrative monitoring via an interactive dashboard with OpenAPI 3.0 **Swagger UI** interactive documentation.
+An end-to-end working MVP built for the **PackersMart Lead-to-Booking Workflow Assessment Task**. The system captures customer relocation inquiries, performs 6-digit OTP phone verification, calculates lead quality scores (`Hot`, `Warm`, `Cold`), matches verified leads to active logistics companies, and provides administrative monitoring via an interactive dashboard with OpenAPI 3.0 **Swagger UI** interactive documentation and public tunneling support.
 
 ---
 
@@ -20,6 +20,67 @@ Customer Lead Form ➔ OTP Verification ➔ Verified Lead ➔ Admin Lead Queue �
 | **6. Dashboard Stats** | Total Leads, Verified, Fake, Duplicate, Pending, Hot/Warm/Cold counts, Company matches | ✅ | Dynamic real-time statistics cards (`DashboardStats.jsx`) |
 | **7. REST APIs** | Section 7 endpoint specifications (`/api/leads`, `/api/leads/:id/verify-otp`, `/api/dashboard`, etc.) | ✅ | Pure JSON REST API routes (`api.js`) |
 | **Swagger UI Docs** | Interactive OpenAPI 3.0 API documentation & sandbox | ✅ | `swagger-ui-express` & `swagger-jsdoc` at `http://localhost:5000/api-docs` |
+| **Public Tunneling** | Expose local services over public HTTPS via ngrok / localtunnel | ✅ | Dynamic API Base URL override & CORS support (`axiosClient.js`) |
+
+---
+
+## 📸 Screenshots of Application
+
+Below are stepwise screenshots demonstrating the complete end-to-end PackersMart application workflow:
+
+### Step 1: Customer Relocation Inquiry - Route & Date Selection
+Captures Pickup City, Destination City, and preferred Moving Date with inline validation.
+
+![Step 1: Relocation Route & Date Selection](docs/screenshots/01_lead_form_step1_route.png)
+
+---
+
+### Step 2: Customer Relocation Inquiry - Service Type Selection
+Allows customers to select inventory volume / service requirement (1 BHK, 2 BHK, 3 BHK, 4+ BHK, Office Shifting, Vehicle Transport).
+
+![Step 2: Service Type Selection](docs/screenshots/02_lead_form_step2_service.png)
+
+---
+
+### Step 3: Customer Contact Information & Submission
+Collects Customer Name, Mobile Number (for 6-digit OTP verification), Email Address, and Special Requirements before form submission.
+
+![Step 3: Customer Contact Details](docs/screenshots/03_lead_form_step3_customer_info.png)
+
+---
+
+### Step 4: 6-Digit OTP Verification Screen
+Displays the 6-digit OTP verification dialog with countdown timer, resend trigger, and built-in **Assessment Quick-Test OTP Auto-Fill** shortcut.
+
+![Step 4: 6-Digit OTP Verification Dialog](docs/screenshots/04_otp_verification_modal.png)
+
+---
+
+### Step 5: Verified Lead Inquiry & Matched Packers & Movers Recommendations
+Renders verified status badge, lead quality score breakdown (+30 OTP, +20 Route, +15 Service, +15 Date), and top matched logistics companies with match scores %, ratings, fleet sizes, and call/book action buttons.
+
+![Step 5: Matched Packers & Movers Recommendations](docs/screenshots/05_matched_companies_modal.png)
+
+---
+
+### Step 6: Admin Operations Dashboard - Executive KPI Statistics Cards
+Provides real-time operational statistics cards displaying Total Leads, Verified Leads, Pending Leads, Fake Leads, Duplicate Leads, Lead Quality breakdown (Hot/Warm/Cold), and Active Logistics Companies.
+
+![Step 6: Admin Dashboard Executive Statistics Cards](docs/screenshots/06_admin_dashboard_kpis.png)
+
+---
+
+### Step 7: Admin Operations Lead Queue & Status Controls
+Filterable and searchable lead management queue table showing customer details, route, service type, lead quality badges (`HOT`, `WARM`, `COLD`), live status transition dropdown selectors (`Pending`, `Verified`, `Fake`, `Duplicate`, `Re-attempt`), and company match openers.
+
+![Step 7: Admin Lead Operations Queue & Status Controls](docs/screenshots/07_admin_lead_queue_table.png)
+
+---
+
+### Step 8: Interactive Swagger UI API Documentation (`http://localhost:5000/api-docs`)
+Provides interactive OpenAPI 3.0 API documentation allowing developers to inspect endpoints, schemas, request payloads, response codes, and test API endpoints directly from the browser sandbox.
+
+![Step 8: Swagger UI Interactive API Documentation](docs/screenshots/08_swagger_ui_api_docs.png)
 
 ---
 
@@ -30,6 +91,41 @@ Customer Lead Form ➔ OTP Verification ➔ Verified Lead ➔ Admin Lead Queue �
 - **API Documentation:** Swagger UI (`swagger-ui-express`) & OpenAPI 3.0 JSDoc (`swagger-jsdoc`)
 - **Database & ORM:** Prisma ORM with SQLite (`dev.db`) for zero-setup local execution
 - **Database SQL Export:** Standard ANSI SQL export provided in [`schema.sql`](file:///f:/PackersMartPlatform/schema.sql)
+
+---
+
+## 🌐 Public Tunneling with ngrok & Localtunnel
+
+You can expose local servers over public HTTPS URLs for remote testing or demonstration:
+
+### 1. Exposing Backend API & Swagger Docs via ngrok
+```bash
+# Install ngrok via winget (Windows)
+winget install ngrok.ngrok
+
+# Authenticate with authtoken (from dashboard.ngrok.com)
+ngrok config add-authtoken <YOUR_AUTHTOKEN>
+
+# Expose Express Backend (Port 5000)
+ngrok http 5000
+```
+- **Public Swagger UI URL:** `https://<your-ngrok-domain>.ngrok-free.app/api-docs`
+- **Public API URL:** `https://<your-ngrok-domain>.ngrok-free.app/api`
+
+### 2. Exposing Frontend Portal via localtunnel (Zero-Setup)
+```bash
+# Expose Express Backend (Port 5000)
+npx localtunnel --port 5000
+
+# Expose React Frontend (Port 3000)
+npx localtunnel --port 3000
+```
+
+To point the React frontend to a public ngrok API backend, set `VITE_API_BASE_URL`:
+```bash
+# In client/
+VITE_API_BASE_URL="https://<your-ngrok-domain>.ngrok-free.app/api" npm run dev
+```
 
 ---
 
@@ -73,7 +169,7 @@ PackersMartPlatform/
 │   │   │   ├── LeadTable.jsx     # Section 3 Admin queue & status switcher
 │   │   │   └── CompanyMatchesModal.jsx # Company recommendations viewer
 │   │   ├── api/
-│   │   │   └── axiosClient.js
+│   │   │   └── axiosClient.js    # Axios HTTP client with VITE_API_BASE_URL override
 │   │   ├── App.jsx               # Application layout & portal switcher
 │   │   └── index.css
 │   └── package.json
@@ -144,65 +240,3 @@ Interactive OpenAPI 3.0 Swagger UI Sandbox is served live at:
 | `PATCH` | `/api/leads/:id/status` | Update lead status (`Pending`, `Verified`, `Fake`, `Duplicate`, `Re-attempt`) | `Admin Lead Management` |
 | `GET` | `/api/leads/:id/matching-companies` | Get suitable company matches for lead | `Company Matching Engine` |
 | `GET` | `/api/dashboard` | Get dynamic dashboard statistics | `Admin Dashboard Statistics` |
-
----
-
-## 📸 Screenshots of Application
-
-Below are stepwise screenshots demonstrating the complete end-to-end PackersMart application workflow:
-
-### Step 1: Customer Relocation Inquiry - Route & Date Selection
-Captures Pickup City, Destination City, and preferred Moving Date with inline validation.
-
-![Step 1: Relocation Route & Date Selection](docs/screenshots/01_lead_form_step1_route.png)
-
----
-
-### Step 2: Customer Relocation Inquiry - Service Type Selection
-Allows customers to select inventory volume / service requirement (1 BHK, 2 BHK, 3 BHK, 4+ BHK, Office Shifting, Vehicle Transport).
-
-![Step 2: Service Type Selection](docs/screenshots/02_lead_form_step2_service.png)
-
----
-
-### Step 3: Customer Contact Information & Submission
-Collects Customer Name, Mobile Number (for 6-digit OTP verification), Email Address, and Special Requirements before form submission.
-
-![Step 3: Customer Contact Details](docs/screenshots/03_lead_form_step3_customer_info.png)
-
----
-
-### Step 4: 6-Digit OTP Verification Screen
-Displays the 6-digit OTP verification dialog with countdown timer, resend trigger, and built-in **Assessment Quick-Test OTP Auto-Fill** shortcut.
-
-![Step 4: 6-Digit OTP Verification Dialog](docs/screenshots/04_otp_verification_modal.png)
-
----
-
-### Step 5: Verified Lead Inquiry & Matched Packers & Movers Recommendations
-Renders verified status badge, lead quality score breakdown (+30 OTP, +20 Route, +15 Service, +15 Date), and top matched logistics companies with match scores %, ratings, fleet sizes, and call/book action buttons.
-
-![Step 5: Matched Packers & Movers Recommendations](docs/screenshots/05_matched_companies_modal.png)
-
----
-
-### Step 6: Admin Operations Dashboard - Executive KPI Statistics Cards
-Provides real-time operational statistics cards displaying Total Leads, Verified Leads, Pending Leads, Fake Leads, Duplicate Leads, Lead Quality breakdown (Hot/Warm/Cold), and Active Logistics Companies.
-
-![Step 6: Admin Dashboard Executive Statistics Cards](docs/screenshots/06_admin_dashboard_kpis.png)
-
----
-
-### Step 7: Admin Operations Lead Queue & Status Controls
-Filterable and searchable lead management queue table showing customer details, route, service type, lead quality badges (`HOT`, `WARM`, `COLD`), live status transition dropdown selectors (`Pending`, `Verified`, `Fake`, `Duplicate`, `Re-attempt`), and company match openers.
-
-![Step 7: Admin Lead Operations Queue & Status Controls](docs/screenshots/07_admin_lead_queue_table.png)
-
----
-
-### Step 8: Interactive Swagger UI API Documentation (`http://localhost:5000/api-docs`)
-Provides interactive OpenAPI 3.0 API documentation allowing developers to inspect endpoints, schemas, request payloads, response codes, and test API endpoints directly from the browser sandbox.
-
-![Step 8: Swagger UI Interactive API Documentation](docs/screenshots/08_swagger_ui_api_docs.png)
-
----
