@@ -1,13 +1,13 @@
 # PackersMart Platform MVP: 1-Day Full-Stack Developer Assessment
 
-An end-to-end working MVP built for the **PackersMart Lead-to-Booking Workflow Assessment Task**. The system captures customer relocation inquiries, performs 6-digit OTP phone verification, calculates lead quality scores (`Hot`, `Warm`, `Cold`), matches verified leads to active logistics companies, and provides administrative monitoring via an interactive dashboard.
+An end-to-end working MVP built for the **PackersMart Lead-to-Booking Workflow Assessment Task**. The system captures customer relocation inquiries, performs 6-digit OTP phone verification, calculates lead quality scores (`Hot`, `Warm`, `Cold`), matches verified leads to active logistics companies, and provides administrative monitoring via an interactive dashboard with OpenAPI 3.0 **Swagger UI** interactive documentation.
 
 ---
 
 ## 📋 Evaluation Checklist & Core Flow
 
 ```text
-Customer Lead Form ➔ OTP Verification ➔ Verified Lead ➔ Admin Lead Queue ➔ Lead Quality ➔ Company Matching ➔ Dashboard
+Customer Lead Form ➔ OTP Verification ➔ Verified Lead ➔ Admin Lead Queue ➔ Lead Quality ➔ Company Matching ➔ Dashboard & Swagger Docs
 ```
 
 | Assessment Section | Requirement | Status | Implementation Details |
@@ -19,6 +19,7 @@ Customer Lead Form ➔ OTP Verification ➔ Verified Lead ➔ Admin Lead Queue �
 | **5. Company Matching** | 5–10 companies seeded; matched by Pickup City, Destination, and Service Type | ✅ | 8 seeded logistics companies + rule-based matching engine (`matchingService.js`) |
 | **6. Dashboard Stats** | Total Leads, Verified, Fake, Duplicate, Pending, Hot/Warm/Cold counts, Company matches | ✅ | Dynamic real-time statistics cards (`DashboardStats.jsx`) |
 | **7. REST APIs** | Section 7 endpoint specifications (`/api/leads`, `/api/leads/:id/verify-otp`, `/api/dashboard`, etc.) | ✅ | Pure JSON REST API routes (`api.js`) |
+| **Swagger UI Docs** | Interactive OpenAPI 3.0 API documentation & sandbox | ✅ | `swagger-ui-express` & `swagger-jsdoc` at `http://localhost:5000/api-docs` |
 
 ---
 
@@ -75,10 +76,18 @@ Filterable and searchable lead management queue table showing customer details, 
 
 ---
 
+### Step 8: Interactive Swagger UI API Documentation (`http://localhost:5000/api-docs`)
+Provides interactive OpenAPI 3.0 API documentation allowing developers to inspect endpoints, schemas, request payloads, response codes, and test API endpoints directly from the browser sandbox.
+
+![Step 8: Swagger UI Interactive API Documentation](docs/screenshots/08_swagger_ui_api_docs.png)
+
+---
+
 ## 🏗️ Selected Technology Stack
 
 - **Frontend:** React 18 (Vite), Tailwind CSS, Lucide React icons, Axios
 - **Backend:** Node.js, Express.js, REST JSON APIs
+- **API Documentation:** Swagger UI (`swagger-ui-express`) & OpenAPI 3.0 JSDoc (`swagger-jsdoc`)
 - **Database & ORM:** Prisma ORM with SQLite (`dev.db`) for zero-setup local execution
 - **Database SQL Export:** Standard ANSI SQL export provided in [`schema.sql`](file:///f:/PackersMartPlatform/schema.sql)
 
@@ -96,7 +105,8 @@ PackersMartPlatform/
 │       ├── 04_otp_verification_modal.png
 │       ├── 05_matched_companies_modal.png
 │       ├── 06_admin_dashboard_kpis.png
-│       └── 07_admin_lead_queue_table.png
+│       ├── 07_admin_lead_queue_table.png
+│       └── 08_swagger_ui_api_docs.png
 ├── server/                       # Node.js / Express Backend
 │   ├── prisma/
 │   │   ├── schema.prisma         # Relational schema (Lead, OtpVerification, Company, LeadCompanyMatch)
@@ -110,7 +120,8 @@ PackersMartPlatform/
 │   │   │   ├── otpController.js   # 6-digit OTP generation & verification
 │   │   │   └── dashboardController.js # Dynamic statistics aggregations
 │   │   ├── routes/
-│   │   │   └── api.js            # Express API Route definitions
+│   │   │   └── api.js            # Express API Route definitions & OpenAPI JSDoc
+│   │   ├── swagger.js            # Swagger UI & OpenAPI 3.0 Configuration
 │   │   └── app.js                # Express Server Listener
 │   └── package.json
 ├── client/                       # React / Vite Frontend
@@ -142,7 +153,8 @@ npx prisma db push
 node prisma/seed.js
 npm run dev
 ```
-*Backend API will run on **`http://localhost:5000`**.*
+*Backend API will run on **`http://localhost:5000`**.*  
+*Interactive Swagger UI API Docs will run on **`http://localhost:5000/api-docs`**.*
 
 ### 2. Frontend Application Setup (`client/`)
 ```bash
@@ -178,14 +190,17 @@ Rule-based matching algorithm that connects verified leads with companies where:
 
 ---
 
-## 🔌 API Endpoint Reference (Section 7 Specification)
+## 🔌 API Endpoint Reference & Swagger UI
 
-| Method | Endpoint | Purpose |
-| :--- | :--- | :--- |
-| `POST` | `/api/leads` | Create a new lead inquiry |
-| `POST` | `/api/leads/:id/verify-otp` | Verify 6-digit OTP for lead |
-| `GET` | `/api/leads` | Get all submitted leads with status filters |
-| `GET` | `/api/leads/:id` | Get single lead details |
-| `PATCH` | `/api/leads/:id/status` | Update lead status (`Pending`, `Verified`, `Fake`, `Duplicate`, `Re-attempt`) |
-| `GET` | `/api/leads/:id/matching-companies` | Get suitable company matches for lead |
-| `GET` | `/api/dashboard` | Get dynamic dashboard statistics |
+Interactive OpenAPI 3.0 Swagger UI Sandbox is served live at:  
+👉 **`http://localhost:5000/api-docs`** (JSON spec at `http://localhost:5000/api-docs.json`)
+
+| Method | Endpoint | Purpose | Swagger Tag |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/api/leads` | Create a new customer lead inquiry | `Customer Leads` |
+| `POST` | `/api/leads/:id/verify-otp` | Verify 6-digit OTP for lead | `OTP Verification` |
+| `GET` | `/api/leads` | Get all submitted leads with status filters | `Admin Lead Management` |
+| `GET` | `/api/leads/:id` | Get single lead details | `Admin Lead Management` |
+| `PATCH` | `/api/leads/:id/status` | Update lead status (`Pending`, `Verified`, `Fake`, `Duplicate`, `Re-attempt`) | `Admin Lead Management` |
+| `GET` | `/api/leads/:id/matching-companies` | Get suitable company matches for lead | `Company Matching Engine` |
+| `GET` | `/api/dashboard` | Get dynamic dashboard statistics | `Admin Dashboard Statistics` |
