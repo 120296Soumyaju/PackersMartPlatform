@@ -18,6 +18,11 @@ app.use((req, res, next) => {
   next();
 });
 
+// Root endpoint (Redirect to Swagger API Docs)
+app.get('/', (req, res) => {
+  res.redirect('/api-docs');
+});
+
 // Health check endpoint
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', service: 'Packers Mart MVP Backend API', timestamp: new Date() });
